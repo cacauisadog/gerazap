@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import CopyIcon from "./ui/icons/CopyIcon";
 
 export default function Home() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [link, setLink] = useState("");
 
   function maskPhone(phone: string) {
     const phoneNumbers = phone.replace(/\D/g, "");
@@ -28,7 +30,7 @@ export default function Home() {
     if (message) {
       url += `?text=${encodeURIComponent(message)}`;
     }
-    console.log(url);
+    setLink(url);
   }
 
   return (
@@ -66,6 +68,17 @@ export default function Home() {
             Gerar link
           </button>
         </form>
+
+        <button
+          value={link}
+          className="flex items-center gap-2 bg-green-50 rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+          onClick={() => navigator.clipboard.writeText(link)}
+        >
+          <span className="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis">
+            {link}
+          </span>
+          <CopyIcon className="w-6 h-6 flex-none" />
+        </button>
       </div>
     </main>
   );
