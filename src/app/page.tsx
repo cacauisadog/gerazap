@@ -6,9 +6,25 @@ export default function Home() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
 
+  function maskPhone(phone: string) {
+    const phoneNumbers = phone.replace(/\D/g, "");
+    const phoneLength = phoneNumbers.length;
+    if (phoneLength <= 2) {
+      return phoneNumbers;
+    }
+    if (phoneLength <= 3) {
+      return `(${phoneNumbers.slice(0, 2)})${phoneNumbers.slice(2)}`;
+    }
+    if (phoneLength <= 7) {
+      return `(${phoneNumbers.slice(0, 2)}) ${phoneNumbers.slice(2, 3)} ${phoneNumbers.slice(3)}`;
+    }
+    return `(${phoneNumbers.slice(0, 2)}) ${phoneNumbers.slice(2, 3)} ${phoneNumbers.slice(3, 7)}-${phoneNumbers.slice(7, 11)}`;
+  }
+
   function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-    let url = `https://wa.me/55${phone}`;
+    const phoneNumbers = phone.replace(/\D/g, "");
+    let url = `https://wa.me/55${phoneNumbers}`;
     if (message) {
       url += `?text=${encodeURIComponent(message)}`;
     }
@@ -28,10 +44,11 @@ export default function Home() {
         <form className="flex flex-col items-center justify-center gap-3 w-full">
           <input
             type="tel"
-            placeholder="Número de telefone"
-            maxLength={11}
+            placeholder="(99) 9 9999-9999"
+            maxLength={16}
             required
             className="rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+            value={maskPhone(phone)}
             onChange={(event) => setPhone(event.target.value)}
           />
           <textarea
