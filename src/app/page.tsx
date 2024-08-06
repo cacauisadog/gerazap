@@ -70,16 +70,18 @@ export default function Home() {
           </button>
         </form>
 
-        <button
-          className="flex justify-between gap-2 bg-green-50 rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
-          aria-label="Copiar link gerado"
-          onClick={() => navigator.clipboard.writeText(link)}
-        >
-          <span className="whitespace-nowrap overflow-hidden overflow-ellipsis">
-            {link}
-          </span>
-          <CopyIcon className="w-6 h-6 flex-none" />
-        </button>
+        {link && (
+          <button
+            className="flex justify-between gap-2 bg-green-50 rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+            aria-label="Copiar link gerado"
+            onClick={() => navigator.clipboard.writeText(link)}
+          >
+            <span className="whitespace-nowrap overflow-hidden overflow-ellipsis">
+              {link}
+            </span>
+            <CopyIcon className="w-6 h-6 flex-none" />
+          </button>
+        )}
       </div>
     </main>
   );
