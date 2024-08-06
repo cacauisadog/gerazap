@@ -32,8 +32,8 @@ export default function Home() {
   }
 
   return (
-    <main className="flex justify-center min-h-screen mt-10">
-      <div className="flex flex-col gap-10 w-full max-w-lg px-4">
+    <main className="flex justify-center min-h-screen mt-5">
+      <div className="flex flex-col gap-8 w-full max-w-lg px-4">
         <h1 className="text-4xl text-center text-green-500">
           <b>Gerazap</b>
         </h1>
