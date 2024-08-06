@@ -1,13 +1,49 @@
 "use client";
 
-import { useState } from "react";
 import { useMemo, useState } from "react";
 import CopyIcon from "./ui/icons/CopyIcon";
+
+const invalidDDDNumbers = [
+  "00",
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "20",
+  "23",
+  "25",
+  "26",
+  "29",
+  "30",
+  "36",
+  "39",
+  "40",
+  "50",
+  "52",
+  "56",
+  "57",
+  "58",
+  "59",
+  "60",
+  "70",
+  "72",
+  "76",
+  "78",
+  "80",
+  "90",
+];
 
 export default function Home() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [link, setLink] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
   const maskedPhoneNumber = useMemo(() => {
     const phoneNumbers = phone.replace(/\D/g, "");
@@ -23,10 +59,32 @@ export default function Home() {
     }
     return `(${phoneNumbers.slice(0, 2)}) ${phoneNumbers.slice(2, 3)} ${phoneNumbers.slice(3, 7)}-${phoneNumbers.slice(7, 11)}`;
   }, [phone]);
+
+  function validatePhone() {
+    const phoneNumbers = phone.replace(/\D/g, "");
+    const phoneLength = phoneNumbers.length;
+    if (phoneLength < 11) {
+      setPhoneError("Número de telefone inválido.");
+      return false;
+    }
+    if (phoneNumbers[0] === "0") {
+      setPhoneError("Número de telefone inválido.");
+      return false;
+    }
+    const ddd = phoneNumbers.slice(0, 2);
+    if (invalidDDDNumbers.includes(ddd)) {
+      setPhoneError("DDD inválido.");
+      return false;
+    }
+    return true;
   }
 
   function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
+    if (!validatePhone()) {
+      return;
+    }
+    setPhoneError("");
     const phoneNumbers = phone.replace(/\D/g, "");
     let url = `https://wa.me/55${phoneNumbers}`;
     if (message) {
@@ -55,6 +113,9 @@ export default function Home() {
             value={maskedPhoneNumber}
             onChange={(event) => setPhone(event.target.value)}
           />
+          {phoneError.length > 0 && (
+            <span className="text-red-500 text-sm self-start mb-4">{phoneError}</span>
+          )}
           <textarea
             placeholder="Mensagem (opcional)"
             maxLength={500}
@@ -72,7 +133,7 @@ export default function Home() {
           </button>
         </form>
 
-        {link && (
+        {link && phoneError.length === 0 && (
           <button
             className="flex justify-between gap-2 bg-green-50 rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
             aria-label="Copiar link gerado"
