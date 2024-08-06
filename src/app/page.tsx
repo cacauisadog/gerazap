@@ -44,6 +44,8 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [link, setLink] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [copyClicked, setCopyClicked] = useState(false);
+  const [copyError, setCopyError] = useState("");
 
   const maskedPhoneNumber = useMemo(() => {
     const phoneNumbers = phone.replace(/\D/g, "");
@@ -85,6 +87,7 @@ export default function Home() {
       return;
     }
     setPhoneError("");
+    setCopyClicked(false);
     const phoneNumbers = phone.replace(/\D/g, "");
     let url = `https://wa.me/55${phoneNumbers}`;
     if (message) {
@@ -93,8 +96,17 @@ export default function Home() {
     setLink(url);
   }
 
+  async function handleClickCopy() {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopyClicked(true);
+    } catch (error: DOMException | any) {
+      setCopyError(error.message);
+    }
+  }
+
   return (
-    <main className="flex justify-center min-h-screen mt-5">
+    <main className="flex justify-center min-h-screen pt-5">
       <div className="flex flex-col gap-8 w-full max-w-lg px-4">
         <h1 className="text-4xl text-center text-green-500">
           <b>Gerazap</b>
@@ -114,7 +126,9 @@ export default function Home() {
             onChange={(event) => setPhone(event.target.value)}
           />
           {phoneError.length > 0 && (
-            <span className="text-red-500 text-sm self-start mb-4">{phoneError}</span>
+            <span className="text-red-500 text-sm self-start mb-4">
+              {phoneError}
+            </span>
           )}
           <textarea
             placeholder="Mensagem (opcional)"
@@ -134,16 +148,28 @@ export default function Home() {
         </form>
 
         {link && phoneError.length === 0 && (
-          <button
-            className="flex justify-between gap-2 bg-green-50 rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
-            aria-label="Copiar link gerado"
-            onClick={() => navigator.clipboard.writeText(link)}
-          >
-            <span className="whitespace-nowrap overflow-hidden overflow-ellipsis">
-              {link}
-            </span>
-            <CopyIcon className="w-6 h-6 flex-none" />
-          </button>
+          <div>
+            <button
+              className="flex justify-between gap-2 bg-green-50 rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+              aria-label="Copiar link gerado"
+              onClick={handleClickCopy}
+            >
+              <span className="whitespace-nowrap overflow-hidden overflow-ellipsis">
+                {link}
+              </span>
+              <CopyIcon className="w-6 h-6 flex-none" />
+            </button>
+            {copyClicked && copyError.length === 0 && (
+              <span className="text-green-500 text-sm self-start mt-4">
+                Link copiado!
+              </span>
+            )}
+            {copyError.length > 0 && (
+              <span className="text-red-500 text-sm self-start mt-4">
+                {copyError}
+              </span>
+            )}
+          </div>
         )}
       </div>
     </main>
