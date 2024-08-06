@@ -53,7 +53,7 @@ export default function Home() {
           />
           <textarea
             placeholder="Mensagem (opcional)"
-            maxLength={50}
+            maxLength={500}
             className="rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg h-full min-h-64 resize-none focus:ring-2 focus:ring-green-500 focus:outline-none"
             onChange={(event) => setMessage(event.target.value)}
           />
