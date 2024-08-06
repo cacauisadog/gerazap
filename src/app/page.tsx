@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useMemo, useState } from "react";
 import CopyIcon from "./ui/icons/CopyIcon";
 
 export default function Home() {
@@ -8,7 +9,7 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [link, setLink] = useState("");
 
-  function maskPhone(phone: string) {
+  const maskedPhoneNumber = useMemo(() => {
     const phoneNumbers = phone.replace(/\D/g, "");
     const phoneLength = phoneNumbers.length;
     if (phoneLength <= 2) {
@@ -21,6 +22,7 @@ export default function Home() {
       return `(${phoneNumbers.slice(0, 2)}) ${phoneNumbers.slice(2, 3)} ${phoneNumbers.slice(3)}`;
     }
     return `(${phoneNumbers.slice(0, 2)}) ${phoneNumbers.slice(2, 3)} ${phoneNumbers.slice(3, 7)}-${phoneNumbers.slice(7, 11)}`;
+  }, [phone]);
   }
 
   function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -50,7 +52,7 @@ export default function Home() {
             maxLength={16}
             required
             className="rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
-            value={maskPhone(phone)}
+            value={maskedPhoneNumber}
             onChange={(event) => setPhone(event.target.value)}
           />
           <textarea
