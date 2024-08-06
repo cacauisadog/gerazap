@@ -32,13 +32,13 @@ export default function Home() {
   }
 
   return (
-    <main className="flex items-center justify-center min-h-screen">
+    <main className="flex justify-center min-h-screen mt-10">
       <div className="flex flex-col gap-10 w-full max-w-lg px-4">
         <h1 className="text-4xl text-center text-green-500">
           <b>Gerazap</b>
         </h1>
         <h2 className="text-2xl text-center text-green-800">
-          Gerador de links para WhatsApp <i>grátis</i>
+          Gerador de links para WhatsApp <i>grátis</i>.
         </h2>
 
         <form className="flex flex-col items-center justify-center gap-3 w-full">
@@ -54,7 +54,7 @@ export default function Home() {
           <textarea
             placeholder="Mensagem (opcional)"
             maxLength={50}
-            className="rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg resize-none focus:ring-2 focus:ring-green-500 focus:outline-none"
+            className="rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg h-full min-h-64 resize-none focus:ring-2 focus:ring-green-500 focus:outline-none"
             onChange={(event) => setMessage(event.target.value)}
           />
 
