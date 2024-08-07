@@ -65,6 +65,10 @@ export default function Home() {
   function validatePhone() {
     const phoneNumbers = phone.replace(/\D/g, "");
     const phoneLength = phoneNumbers.length;
+    if (phoneLength === 0) {
+      setPhoneError("Número de telefone é obrigatório.");
+      return false;
+    }
     if (phoneLength < 11) {
       setPhoneError("Número de telefone inválido.");
       return false;
@@ -78,6 +82,7 @@ export default function Home() {
       setPhoneError("DDD inválido.");
       return false;
     }
+    setPhoneError("");
     return true;
   }
 
