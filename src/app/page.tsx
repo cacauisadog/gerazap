@@ -39,11 +39,12 @@ const invalidDDDNumbers = [
 ];
 
 export default function Home() {
+  const [link, setLink] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [copyClicked, setCopyClicked] = useState(false);
-  const [copyError, setCopyError] = useState("");
+  const [hasCopyError, setHasCopyError] = useState(false);
 
   const maskedPhoneNumber = useMemo(() => {
     const phoneNumbers = phone.replace(/\D/g, "");
@@ -99,11 +100,13 @@ export default function Home() {
     if (message) {
       url += `?text=${encodeURIComponent(message)}`;
     }
+    setLink(url);
     try {
       await navigator.clipboard.writeText(url);
       setCopyClicked(true);
-    } catch (error: DOMException | any) {
-      setCopyError(error.message);
+    } catch (error: unknown) {
+      console.error(error);
+      setHasCopyError(true);
     }
   }
 
@@ -150,10 +153,27 @@ export default function Home() {
           </button>
         </form>
 
-        {copyClicked && copyError.length === 0 && phoneError.length === 0 && (
+        {!hasCopyError && copyClicked && phoneError.length === 0 && (
           <p className="text-xl text-center text-green-500 mt-4">
             O link foi gerado e já está copiado para você! Agora basta apenas
             colar e usá-lo onde quiser :)
+          </p>
+        )}
+
+        {hasCopyError && copyClicked && phoneError.length === 0 && (
+          <p className="text-al text-center mt-4">
+            Algo deu errado ao copiar o link, mas ele foi gerado e você pode
+            copiá-lo manualmente:
+            <br />
+            <br />
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 max-w-full underline break-all whitespace-pre-wrap hover:text-blue-700"
+            >
+              {link}
+            </a>
           </p>
         )}
       </div>
