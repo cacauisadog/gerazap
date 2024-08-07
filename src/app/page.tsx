@@ -69,8 +69,8 @@ export default function Home() {
       setPhoneError("Número de telefone inválido.");
       return false;
     }
-    if (phoneNumbers[0] === "0") {
-      setPhoneError("Número de telefone inválido.");
+    if (phoneNumbers[2] !== "9") {
+      setPhoneError("Celulares precisam ter o dígito 9.");
       return false;
     }
     const ddd = phoneNumbers.slice(0, 2);
@@ -123,6 +123,7 @@ export default function Home() {
             required
             className="rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
             value={maskedPhoneNumber}
+            onBlur={validatePhone}
             onChange={(event) => setPhone(event.target.value)}
           />
           {phoneError.length > 0 && (
