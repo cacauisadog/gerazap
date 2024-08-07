@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import CopyIcon from "./ui/icons/CopyIcon";
 
 const invalidDDDNumbers = [
   "00",
@@ -42,7 +41,6 @@ const invalidDDDNumbers = [
 export default function Home() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
-  const [link, setLink] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [copyClicked, setCopyClicked] = useState(false);
   const [copyError, setCopyError] = useState("");
@@ -82,11 +80,14 @@ export default function Home() {
       setPhoneError("DDD inválido.");
       return false;
     }
+    setCopyClicked(false);
     setPhoneError("");
     return true;
   }
 
-  function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  async function handleSubmit(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) {
     e.preventDefault();
     if (!validatePhone()) {
       return;
@@ -98,12 +99,8 @@ export default function Home() {
     if (message) {
       url += `?text=${encodeURIComponent(message)}`;
     }
-    setLink(url);
-  }
-
-  async function handleClickCopy() {
     try {
-      await navigator.clipboard.writeText(link);
+      await navigator.clipboard.writeText(url);
       setCopyClicked(true);
     } catch (error: DOMException | any) {
       setCopyError(error.message);
@@ -112,7 +109,7 @@ export default function Home() {
 
   return (
     <main className="flex justify-center min-h-screen pt-5">
-      <div className="flex flex-col gap-8 w-full max-w-lg px-4">
+      <div className="flex flex-col space-y-6 w-full max-w-lg px-4">
         <h1 className="text-4xl text-center text-green-500">
           <b>Gerazap</b>
         </h1>
@@ -146,36 +143,18 @@ export default function Home() {
           <button
             type="submit"
             onClick={handleSubmit}
-            className="rounded border border-green-500 w-full max-w-lg bg-green-500 text-white py-3 shadow shadow-gray-500 font-bold hover:bg-green-600 transition-colors duration-300 focus:ring-2 focus:ring-green-800 focus:outline-none"
+            className="flex rounded border border-green-500 w-full max-w-lg bg-green-500 text-white py-3 shadow shadow-gray-500 font-bold hover:bg-green-600 transition-colors duration-300 focus:ring-2 focus:ring-green-800 focus:outline-none"
             aria-label="Gerar link"
           >
-            Gerar link
+            <span className="flex-1">Gerar e copiar link!</span>
           </button>
         </form>
 
-        {link && phoneError.length === 0 && (
-          <div>
-            <button
-              className="flex justify-between gap-2 bg-green-50 rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
-              aria-label="Copiar link gerado"
-              onClick={handleClickCopy}
-            >
-              <span className="whitespace-nowrap overflow-hidden overflow-ellipsis">
-                {link}
-              </span>
-              <CopyIcon className="w-6 h-6 flex-none" />
-            </button>
-            {copyClicked && copyError.length === 0 && (
-              <span className="text-green-500 text-sm self-start mt-4">
-                Link copiado!
-              </span>
-            )}
-            {copyError.length > 0 && (
-              <span className="text-red-500 text-sm self-start mt-4">
-                {copyError}
-              </span>
-            )}
-          </div>
+        {copyClicked && copyError.length === 0 && phoneError.length === 0 && (
+          <p className="text-xl text-center text-green-500 mt-4">
+            O link foi gerado e já está copiado para você! Agora basta apenas
+            colar e usá-lo onde quiser :)
+          </p>
         )}
       </div>
     </main>
