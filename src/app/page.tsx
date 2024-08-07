@@ -79,9 +79,13 @@ export default function Home() {
       setPhoneError("DDD inválido.");
       return false;
     }
-    setCopyClicked(false);
-    setPhoneError("");
+    clearErrors();
     return true;
+  }
+
+  function clearErrors() {
+    setPhoneError("");
+    setHasCopyError(false);
   }
 
   async function handleSubmit(
@@ -91,8 +95,7 @@ export default function Home() {
     if (!validatePhone()) {
       return;
     }
-    setPhoneError("");
-    setCopyClicked(false);
+    clearErrors();
     let url = `https://wa.me/55${phone}`;
     if (message.length > 0) {
       url += `?text=${encodeURIComponent(message)}`;
