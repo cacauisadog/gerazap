@@ -97,7 +97,7 @@ export default function Home() {
     setCopyClicked(false);
     const phoneNumbers = phone.replace(/\D/g, "");
     let url = `https://wa.me/55${phoneNumbers}`;
-    if (message) {
+    if (message.length > 0) {
       url += `?text=${encodeURIComponent(message)}`;
     }
     setLink(url);
