@@ -47,23 +47,21 @@ export default function Home() {
   const [hasCopyError, setHasCopyError] = useState(false);
 
   const maskedPhoneNumber = useMemo(() => {
-    const phoneNumbers = phone.replace(/\D/g, "");
-    const phoneLength = phoneNumbers.length;
+    const phoneLength = phone.length;
     if (phoneLength <= 2) {
-      return phoneNumbers;
+      return phone;
     }
     if (phoneLength <= 3) {
-      return `(${phoneNumbers.slice(0, 2)})${phoneNumbers.slice(2)}`;
+      return `(${phone.slice(0, 2)})${phone.slice(2)}`;
     }
     if (phoneLength <= 7) {
-      return `(${phoneNumbers.slice(0, 2)}) ${phoneNumbers.slice(2, 3)} ${phoneNumbers.slice(3)}`;
+      return `(${phone.slice(0, 2)}) ${phone.slice(2, 3)} ${phone.slice(3)}`;
     }
-    return `(${phoneNumbers.slice(0, 2)}) ${phoneNumbers.slice(2, 3)} ${phoneNumbers.slice(3, 7)}-${phoneNumbers.slice(7, 11)}`;
+    return `(${phone.slice(0, 2)}) ${phone.slice(2, 3)} ${phone.slice(3, 7)}-${phone.slice(7, 11)}`;
   }, [phone]);
 
   function validatePhone() {
-    const phoneNumbers = phone.replace(/\D/g, "");
-    const phoneLength = phoneNumbers.length;
+    const phoneLength = phone.length;
     if (phoneLength === 0) {
       setPhoneError("Número de telefone é obrigatório.");
       return false;
@@ -72,11 +70,11 @@ export default function Home() {
       setPhoneError("Número de telefone inválido.");
       return false;
     }
-    if (phoneNumbers[2] !== "9") {
+    if (phone[2] !== "9") {
       setPhoneError("Celulares precisam ter o dígito 9.");
       return false;
     }
-    const ddd = phoneNumbers.slice(0, 2);
+    const ddd = phone.slice(0, 2);
     if (invalidDDDNumbers.includes(ddd)) {
       setPhoneError("DDD inválido.");
       return false;
@@ -95,8 +93,7 @@ export default function Home() {
     }
     setPhoneError("");
     setCopyClicked(false);
-    const phoneNumbers = phone.replace(/\D/g, "");
-    let url = `https://wa.me/55${phoneNumbers}`;
+    let url = `https://wa.me/55${phone}`;
     if (message.length > 0) {
       url += `?text=${encodeURIComponent(message)}`;
     }
@@ -129,7 +126,9 @@ export default function Home() {
             className="rounded shadow shadow-gray-400 px-4 py-2 w-full max-w-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
             value={maskedPhoneNumber}
             onBlur={validatePhone}
-            onChange={(event) => setPhone(event.target.value)}
+            onChange={(event) =>
+              setPhone(event.target.value.replace(/\D/g, ""))
+            }
           />
           {phoneError.length > 0 && (
             <span className="text-red-500 text-sm self-start mb-4">
