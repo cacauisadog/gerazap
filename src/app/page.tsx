@@ -49,11 +49,14 @@ export default function Home() {
 
   const maskedPhoneNumber = useMemo(() => {
     const phoneLength = phone.length;
-    if (phoneLength <= 2) {
+    if (phoneLength === 0) {
       return phone;
     }
+    if (phoneLength <= 2) {
+      return `(${phone}`;
+    }
     if (phoneLength <= 3) {
-      return `(${phone.slice(0, 2)})${phone.slice(2)}`;
+      return `(${phone.slice(0, 2)}) ${phone.slice(2)}`;
     }
     if (phoneLength <= 7) {
       return `(${phone.slice(0, 2)}) ${phone.slice(2, 3)} ${phone.slice(3)}`;
